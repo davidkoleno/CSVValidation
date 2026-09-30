@@ -4,7 +4,7 @@ from config import ValidatorConfig
 from reporting import write_reports
 from schema_validator import compare_schemas
 from validator import discover_files, validate_file
-
+from repair import repair_files
 
 INPUT_FOLDER = Path(
     r"C:\Path\To\Input"
@@ -14,6 +14,9 @@ REPORT_FOLDER = Path(
     r"C:\Path\To\ValidationReports"
 )
 
+REPAIR_FOLDER = Path(
+    r"C:\Path\To\Repaired"
+)
 
 def main():
     config = ValidatorConfig(
@@ -82,12 +85,24 @@ def main():
 
     compare_schemas(results)
 
-    print("Writing reports...")
+    print("Writing validation reports...")
 
     write_reports(
         results,
         config.report_folder,
     )
+
+    print()
+    print("Repairing files...")
+
+    repair_files(
+        results,
+        config,
+        REPAIR_FOLDER,
+    )
+
+    print()
+    print("Repair complete.")
 
     passed = sum(
         1
